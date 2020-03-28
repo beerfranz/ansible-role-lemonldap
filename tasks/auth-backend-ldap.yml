@@ -1,0 +1,39 @@
+---
+- name: Set LDAP auth backend.
+  shell: 
+    chdir: "{{ install_dir }}"
+    cmd: "docker-compose exec -T lemonldap /usr/share/lemonldap-ng/bin/lemonldap-ng-cli -yes 1 set \
+        authentication LDAP \
+        userDB LDAP \
+        passwordDB LDAP \
+        ldapServer '{{ lemonldap_config.ldapServer }}' \
+        managerDn '{{ lemonldap_config.managerDn }}' \
+        managerPassword '{{ managerPassword }}' \
+        ldapBase '{{ lemonldap_config.ldapBase }}' \
+        AuthLDAPFilter '{{ lemonldap_config.AuthLDAPFilter }}'"
+  when: install_type == 'docker-compose'
+
+- name: Set LDAP exported vars backend.
+  shell: 
+    chdir: "{{ install_dir }}"
+    cmd: "docker-compose exec -T lemonldap /usr/share/lemonldap-ng/bin/lemonldap-ng-cli -yes 1 addKey \
+        ldapExportedVars uid uid \
+        ldapExportedVars cn cn \
+        ldapExportedVars sn sn \
+        ldapExportedVars mobile mobile \
+        ldapExportedVars mail mail \
+        ldapExportedVars givenName givenName"
+  when: install_type == 'docker-compose'
+
+- name: Set LDAP group attributes.
+  shell: 
+    chdir: "{{ install_dir }}"
+    cmd: "docker-compose exec -T lemonldap /usr/share/lemonldap-ng/bin/lemonldap-ng-cli -yes 1 set \
+        ldapGroupBase '{{ lemonldap_config.ldapGroupBase }}' \
+        ldapGroupObjectClass {{ lemonldap_config.ldapGroupObjectClass }} \
+        ldapGroupAttributeName {{ lemonldap_config.ldapGroupAttributeName }} \
+        ldapGroupAttributeNameGroup {{ lemonldap_config.ldapGroupAttributeNameGroup }} \
+        ldapGroupAttributeNameSearch {{ lemonldap_config.ldapGroupAttributeNameSearch }} \
+        ldapGroupAttributeNameUser {{ lemonldap_config.ldapGroupAttributeNameUser }} \
+        ldapGroupRecursive 1"
+  when: install_type == 'docker-compose'

@@ -1,0 +1,47 @@
+install: true
+configure: true
+
+install_type: docker-compose
+install_dir: /appli/lemonldap
+
+domain_first_level: local
+domain_second_level: dev
+domain: "{{ domain_second_level }}.{{ domain_first_level }}"
+
+https: false
+letsencrypt_certificate: false
+
+docker_image: coudot/lemonldap-ng:2.0.7
+docker_ports:
+  - "80:80"
+docker_networks:
+  - dev
+  - other_dev
+
+auth_backend: ldap
+
+lemonldap_config:
+  authentication: LDAP
+  ldapServer: 'ldap://ldap'
+  ldapPort: 389
+  ldapVersion: 3
+  ldapBase: ou=Users,dc={{ domain_second_level }},dc={{ domain_first_level }}
+  ldapAuthnLevel: 2
+  managerDn: cn=admin,dc={{ domain_second_level }},dc={{ domain_first_level }}
+  AuthLDAPFilter: (&(|(cn=$user)(mail=$user))(objectClass=inetOrgPerson))
+  ldapGroupBase: ou=Groups,dc={{ domain_second_level }},dc={{ domain_first_level }}
+  ldapGroupObjectClass: groupOfUniqueNames
+  ldapGroupAttributeName: uniqueMember
+  ldapGroupAttributeNameGroup: dn
+  ldapGroupAttributeNameUser: dn
+  ldapGroupAttributeNameSearch: cn
+  ldapPasswordResetAttributeValue: TRUE
+  # ldapExportedVars:
+  registerDB: None
+  # SMTPServer:
+  # SMTPPort:
+  # SMTPTLS: starttls
+  # SMTPAuthUser:
+  # SMTPAuthPass:
+  mailFrom: no-reply@{{ domain }}
+  mailReplyTo: no-reply@{{ domain }}

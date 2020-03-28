@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  lemonldap:
+    image: {{ docker_image }}
+    restart: always
+    environment:
+      - SSODOMAIN={{ domain }}
+    networks:
+      {% for network in docker_networks -%}
+      - {{ network }}
+      {% endfor %}
+
+    {% if docker_ports %}
+
+    ports:
+      {% for port in docker_ports -%}
+      - "{{ port }}"
+      {% endfor %}
+    {% endif %}
+
+    labels:
+      - traefik.http.routers.auth.rule=Host(`auth.{{ domain }}`)
+      - traefik.http.routers.manager.rule=Host(`manager.{{ domain }}`)
+      - traefik.http.routers.reload.rule=Host(`reload.{{ domain }}`)
+      {% if https -%}
+      # auth HTTPS
+      - traefik.http.routers.auth-unsecure.rule=Host(`auth.{{ domain }}`)
+      - traefik.http.routers.auth-unsecure.middlewares=force_https
+      - traefik.http.routers.auth.tls=true
+      # manager HTTPS
+      - traefik.http.routers.manager-unsecure.rule=Host(`manager.{{ domain }}`)
+      - traefik.http.routers.manager-unsecure.middlewares=force_https
+      - traefik.http.routers.manager.tls=true
+      # reload HTTPS
+      - traefik.http.routers.reload-unsecure.rule=Host(`reload.{{ domain }}`)
+      - traefik.http.routers.reload-unsecure.middlewares=force_https
+      - traefik.http.routers.reload.tls=true
+      # HTTPS - letsencrypt activation
+      {% if letsencrypt_certificate -%}
+      - traefik.http.routers.auth.tls.certresolver=le
+      - traefik.http.routers.manager.tls.certresolver=le
+      - traefik.http.routers.reload.tls.certresolver=le
+      {%- endif -%}
+      {%- endif %}
+
+networks:
+  {% for network in docker_networks -%}
+  {{ network }}:
+    external: true
+  {% endfor %}
