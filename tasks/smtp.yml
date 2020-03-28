@@ -1,0 +1,13 @@
+---
+- name: Set SMTP.
+  shell: 
+    chdir: "{{ install_dir }}"
+    cmd: "docker-compose exec -T lemonldap /usr/share/lemonldap-ng/bin/lemonldap-ng-cli -yes 1 set \
+        SMTPServer '{{ smtp_server }}' \
+        SMTPPort '{{ smtp_port }}' \
+        SMTPTLS '{{ smtp_tls }}' \
+        SMTPAuthUser '{{ smtp_user }}' \
+        SMTPAuthPass '{{ smtp_passwd }}' \
+        mailFrom '{{ mailFrom }}' \
+        mailReplyTo '{{ mailReplyTo }}'"
+  when: install_type == 'docker-compose'

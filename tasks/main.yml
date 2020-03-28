@@ -1,6 +1,9 @@
 ---
 - import_tasks: "{{ install_type }}.yml"
-  when: install == 'true'
+  when: install == true
 
 - import_tasks: "auth-backend-{{ auth_backend }}.yml"
-  when: configure == 'true'
+  when: configure == true
+
+- import_tasks: smtp.yml
+  when: configure == true
