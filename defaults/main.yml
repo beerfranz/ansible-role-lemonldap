@@ -38,10 +38,11 @@ lemonldap_config:
   ldapPasswordResetAttributeValue: TRUE
   # ldapExportedVars:
   registerDB: None
-  # SMTPServer:
-  # SMTPPort:
-  # SMTPTLS: starttls
-  # SMTPAuthUser:
-  # SMTPAuthPass:
-  mailFrom: no-reply@{{ domain }}
-  mailReplyTo: no-reply@{{ domain }}
+
+smtp_server: smtp
+smtp_port:
+smtp_tls: starttls
+smtp_user:
+smtp_passwd:
+mailFrom: no-reply@{{ domain }}
+mailReplyTo: no-reply@{{ domain }}

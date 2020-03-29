@@ -1,0 +1,18 @@
+install: true
+configure: true
+
+install_type: docker-compose
+install_dir: /ansible-test/lemonldap
+
+domain_first_level: local
+domain_second_level: ansible-test
+domain: "{{ domain_second_level }}.{{ domain_first_level }}"
+
+https: false
+letsencrypt_certificate: false
+
+docker_ports:
+docker_networks:
+  - ansible-test
+
+managerPassword: test

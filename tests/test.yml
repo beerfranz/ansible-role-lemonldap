@@ -1,0 +1,16 @@
+---
+- hosts: all
+  roles:
+    - ../ansible-role-lemonldap/
+
+  pre_tasks:
+    - debug:
+        msg: "TODO: install sendmail server + traefik + ldap"
+
+
+  post_tasks:
+    - name: Stop lemonLDAP::NG
+      become: true
+      docker_compose:
+        project_src: "{{ install_dir }}"
+        state: absent
