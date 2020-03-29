@@ -27,4 +27,4 @@ jobs:
 
       - name: Run test
         run: |
-          ansible-playbook -i tests/hosts tests/test.yml
+          ansible-playbook -i tests/hosts tests/test.yml --limit github_action
