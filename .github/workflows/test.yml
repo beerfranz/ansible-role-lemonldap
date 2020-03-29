@@ -30,7 +30,9 @@ jobs:
           which python
           python --version
           pip --version
-          
+          which docker
+          docker --version
+          docker-compose --version
 
       - name: Run test
         run: |
